@@ -1,24 +1,37 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:todo/core/services/preferences_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
-import '../widgets/task_list_widget.dart';
+import '../../core/services/preferences_manager.dart';
+import '../../core/components/task_list_widget.dart';
 
-class CompletedTasksScreen extends StatefulWidget {
-  const CompletedTasksScreen({super.key});
+class TasksScreen extends StatefulWidget {
+  const TasksScreen({super.key});
 
   @override
-  State<CompletedTasksScreen> createState() => _CompletedTasksScreenState();
+  State<TasksScreen> createState() => _TasksScreenState();
 }
 
-class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
-  List<TaskModel> completeTasks = [];
+class _TasksScreenState extends State<TasksScreen> {
+  List<TaskModel> todoTasks = [];
 
   @override
   void initState() {
     super.initState();
 
     _lodeTasks();
+  }
+
+  void _lodeTasks() async {
+    final finaltask = PreferencesManager().getString("tasks");
+    if (finaltask != null) {
+      final taskAfterDecode = jsonDecode(finaltask) as List<dynamic>;
+      setState(() {
+        todoTasks = taskAfterDecode
+            .map((element) => TaskModel.fromjson(element))
+            .where((element) => element.isDone == false)
+            .toList();
+      });
+    }
   }
 
   _deleteTask(int? id) async {
@@ -33,26 +46,10 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
       tasks.removeWhere((e) => e.id == id);
 
       setState(() {
-        completeTasks.removeWhere((task) => task.id == id);
+        todoTasks.removeWhere((task) => task.id == id);
       });
-      final updatedTask = completeTasks
-          .map((element) => element.toJson())
-          .toList();
+      final updatedTask = todoTasks.map((element) => element.toJson()).toList();
       PreferencesManager().setString('tasks', jsonEncode(updatedTask));
-    }
-  }
-
-  void _lodeTasks() async {
-    final finaltask = PreferencesManager().getString('tasks');
-
-    if (finaltask != null) {
-      final taskAfterDecode = jsonDecode(finaltask) as List<dynamic>;
-      setState(() {
-        completeTasks = taskAfterDecode
-            .map((element) => TaskModel.fromjson(element))
-            .where((element) => element.isDone == true)
-            .toList();
-      });
     }
   }
 
@@ -64,18 +61,20 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
         Padding(
           padding: const EdgeInsets.all(18.0),
           child: Text(
-            'Completed Tasks',
-            style: Theme.of(context).textTheme.labelSmall,
+            'To Do Tasks',
+            style: Theme.of(
+              context,
+            ).textTheme.displaySmall!.copyWith(fontSize: 20),
           ),
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: TaskListWidget(
-              tasks: completeTasks,
+              tasks: todoTasks,
               onTap: (value, index) async {
                 setState(() {
-                  completeTasks[index!].isDone = value ?? false;
+                  todoTasks[index!].isDone = value ?? false;
                 });
                 final allData = PreferencesManager().getString('tasks');
                 if (allData != null) {
@@ -83,9 +82,10 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
                       .map((element) => TaskModel.fromjson(element))
                       .toList();
                   final int newIndex = allDataList.indexWhere(
-                    (e) => e.id == completeTasks[index!].id,
+                    (e) => e.id == todoTasks[index!].id,
                   );
-                  allDataList[newIndex] = completeTasks[index!];
+                  allDataList[newIndex] = todoTasks[index!];
+
                   await PreferencesManager().setString(
                     'tasks',
                     jsonEncode(allDataList),

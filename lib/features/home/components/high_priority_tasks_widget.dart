@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/screens/high_priority_screen.dart';
-import '../core/widgets/custom_check_box.dart';
-import '../core/widgets/custom_svg_picture.dart';
+import 'package:todo/features/tasks/high_priority_screen.dart';
+import '../../../core/widgets/custom_check_box.dart';
+import '../../../core/widgets/custom_svg_picture.dart';
 
 class HighPriorityTasksWidget extends StatelessWidget {
   const HighPriorityTasksWidget({

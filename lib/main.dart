@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/core/services/preferences_manager.dart';
-import 'package:todo/screens/main_screen.dart';
-import 'package:todo/screens/welcome_screen.dart';
+import 'package:todo/features/navigation/main_screen.dart';
+import 'package:todo/features/welcome/welcome_screen.dart';
 import 'core/theme/dark_theme.dart';
 import 'core/theme/light_theme.dart';
 import 'core/theme/theme_controller.dart';

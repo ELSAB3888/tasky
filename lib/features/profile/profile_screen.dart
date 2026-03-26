@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:todo/core/theme/theme_controller.dart';
-import 'package:todo/screens/user_details_screen.dart' show UserDetailsScreen;
-import 'package:todo/screens/welcome_screen.dart';
-import '../core/services/preferences_manager.dart';
-import '../core/widgets/custom_svg_picture.dart';
+import 'package:todo/features/profile/user_details_screen.dart'
+    show UserDetailsScreen;
+import 'package:todo/features/welcome/welcome_screen.dart';
+import '../../core/services/preferences_manager.dart';
+import '../../core/widgets/custom_svg_picture.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

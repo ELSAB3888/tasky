@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
 import 'dart:convert';
-import 'package:todo/widgets/task_list_widget.dart';
-import '../core/services/preferences_manager.dart';
+import 'package:todo/core/components/task_list_widget.dart';
+import '../../core/services/preferences_manager.dart';
 
 class HighPriorityScreen extends StatefulWidget {
   const HighPriorityScreen({super.key});

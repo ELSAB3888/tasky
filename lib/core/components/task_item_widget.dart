@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:todo/core/theme/theme_controller.dart';
 import 'package:todo/core/widgets/custom_text_from_field.dart';
 import 'package:todo/models/task_model.dart';
-import '../core/enums/task_item_actions_enum.dart';
-import '../core/services/preferences_manager.dart';
-import '../core/widgets/custom_check_box.dart';
+import '../enums/task_item_actions_enum.dart';
+import '../services/preferences_manager.dart';
+import '../widgets/custom_check_box.dart';
 
 class TaskItemWidget extends StatelessWidget {
   const TaskItemWidget({

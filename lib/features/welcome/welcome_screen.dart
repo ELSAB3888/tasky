@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/core/services/preferences_manager.dart';
 import 'package:todo/core/widgets/custom_svg_picture.dart';
 import 'package:todo/core/widgets/custom_text_from_field.dart';
-import 'package:todo/screens/main_screen.dart';
+import 'package:todo/features/navigation/main_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({super.key});
