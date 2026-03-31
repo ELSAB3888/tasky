@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/core/widgets/custom_text_from_field.dart';
+import '../../core/constants/storage_key.dart';
 import '../../core/services/preferences_manager.dart';
 
 class UserDetailsScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   onPressed: () async {
                     if (_key.currentState!.validate()) {
                       await PreferencesManager().setString(
-                        'username',
+                        StorageKey.username,
                         userNameController.text,
                       );
                       await PreferencesManager().setString(

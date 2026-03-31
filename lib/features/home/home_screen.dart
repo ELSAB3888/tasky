@@ -6,6 +6,7 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/features/add_task/add_task_screen.dart';
 import 'package:todo/features/home/components/high_priority_tasks_widget.dart';
 import 'package:todo/features/home/components/sliver_list_widget.dart';
+import '../../core/constants/storage_key.dart';
 import '../../core/services/preferences_manager.dart';
 import '../../core/widgets/custom_svg_picture.dart';
 import 'components/achieved_tasks_widget.dart';
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _lodeUserName() async {
     setState(() {
-      username = PreferencesManager().getString('username');
+      username = PreferencesManager().getString(StorageKey.username);
       userImagePath = PreferencesManager().getString('user_Image');
     });
   }

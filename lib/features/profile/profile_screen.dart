@@ -6,6 +6,7 @@ import 'package:todo/core/theme/theme_controller.dart';
 import 'package:todo/features/profile/user_details_screen.dart'
     show UserDetailsScreen;
 import 'package:todo/features/welcome/welcome_screen.dart';
+import '../../core/constants/storage_key.dart';
 import '../../core/services/preferences_manager.dart';
 import '../../core/widgets/custom_svg_picture.dart';
 
@@ -30,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _loedData() async {
     setState(() {
-      username = PreferencesManager().getString('username') ?? 'Guest';
+      username = PreferencesManager().getString(StorageKey.username) ?? 'Guest';
       motivationQuote =
           PreferencesManager().getString('motivation_quote') ??
           'One task at a time. One step closer.';
@@ -157,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Divider(),
                 ListTile(
                   onTap: () async {
-                    PreferencesManager().remove('username');
+                    PreferencesManager().remove(StorageKey.username);
                     PreferencesManager().remove('motivation_quote');
                     PreferencesManager().remove("tasks");
                     Navigator.pushAndRemoveUntil(
