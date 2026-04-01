@@ -5,6 +5,8 @@ import 'package:todo/core/widgets/custom_text_from_field.dart'
     show CustomTextFromField;
 import 'package:todo/models/task_model.dart';
 
+import '../../core/constants/storage_key.dart';
+
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
 
@@ -92,7 +94,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      final taskjson = PreferencesManager().getString('tasks');
+                      final taskjson = PreferencesManager().getString(
+                        StorageKey.tasks,
+                      );
                       List<dynamic> taskList = [];
                       if (taskjson != null) {
                         taskList = jsonDecode(taskjson);
@@ -108,7 +112,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
                       final taskEncode = jsonEncode(taskList);
 
-                      await PreferencesManager().setString("tasks", taskEncode);
+                      await PreferencesManager().setString(
+                        StorageKey.tasks,
+                        taskEncode,
+                      );
 
                       Navigator.of(context).pop(true);
                     }

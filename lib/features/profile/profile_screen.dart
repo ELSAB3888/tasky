@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       username = PreferencesManager().getString(StorageKey.username) ?? 'Guest';
       motivationQuote =
-          PreferencesManager().getString('motivation_quote') ??
+          PreferencesManager().getString(StorageKey.motivation) ??
           'One task at a time. One step closer.';
       userImagePath = PreferencesManager().getString('user_Image');
       isLoading = false;
@@ -159,8 +159,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ListTile(
                   onTap: () async {
                     PreferencesManager().remove(StorageKey.username);
-                    PreferencesManager().remove('motivation_quote');
-                    PreferencesManager().remove("tasks");
+                    PreferencesManager().remove(StorageKey.motivation);
+                    PreferencesManager().remove(StorageKey.tasks);
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(

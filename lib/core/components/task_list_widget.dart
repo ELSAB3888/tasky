@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/core/components/task_item_widget.dart';
 
+import '../theme/theme_controller.dart';
+
 class TaskListWidget extends StatelessWidget {
   const TaskListWidget({
     super.key,
@@ -25,7 +27,10 @@ class TaskListWidget extends StatelessWidget {
         ? Center(
             child: Text(
               emptyMessage ?? "Add Your Tasks Here",
-              style: Theme.of(context).textTheme.labelLarge,
+              style: const TextStyle(
+                color: Colors.red, // هل سيتحول النص للون الأحمر؟
+                fontSize: 24,
+              ),
             ),
           )
         : ListView.separated(

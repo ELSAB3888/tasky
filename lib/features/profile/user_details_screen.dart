@@ -95,7 +95,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         userNameController.text,
                       );
                       await PreferencesManager().setString(
-                        'motivation_quote',
+                        StorageKey.motivation,
                         motivationQuoteController.text,
                       );
 
