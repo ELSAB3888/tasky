@@ -1,229 +1,167 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/features/home/home_controller.dart';
-import 'package:todo/models/task_model.dart';
 import 'package:todo/features/add_task/add_task_screen.dart';
 import 'package:todo/features/home/components/high_priority_tasks_widget.dart';
 import 'package:todo/features/home/components/sliver_list_widget.dart';
-import '../../core/constants/storage_key.dart';
-import '../../core/services/preferences_manager.dart';
 import '../../core/theme/theme_controller.dart';
 import '../../core/widgets/custom_svg_picture.dart';
 import 'components/achieved_tasks_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  String? username = "Default";
-  String? userImagePath;
-  List<TaskModel> tasks = [];
-  int totalTask = 0;
-  int totalDoneTasks = 0;
-  double percent = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _lodeUserName();
-    _lodeTasks();
-  }
-
-  void _lodeUserName() async {
-    setState(() {
-      username = PreferencesManager().getString(StorageKey.username);
-      userImagePath = PreferencesManager().getString('user_Image');
-    });
-  }
-
-  void _lodeTasks() async {
-    final finaltask = PreferencesManager().getString(StorageKey.tasks);
-    if (finaltask != null) {
-      final taskAfterDecode = jsonDecode(finaltask) as List<dynamic>;
-
-      setState(() {
-        tasks = taskAfterDecode
-            .map((element) => TaskModel.fromjson(element))
-            .toList();
-        _calculatePercent();
-      });
-    }
-  }
-
-  _calculatePercent() {
-    setState(() {
-      totalTask = tasks.length;
-      totalDoneTasks = tasks.where((e) => e.isDone ?? false).length;
-      percent = totalTask == 0 ? 0 : totalDoneTasks / totalTask;
-    });
-  }
-
-  _doneTask(bool? value, int? index) async {
-    setState(() {
-      tasks[index!].isDone = value ?? false;
-      _calculatePercent();
-    });
-    final updatedTask = tasks.map((element) => element.toJson()).toList();
-    PreferencesManager().setString(StorageKey.tasks, jsonEncode(updatedTask));
-  }
-
-  _deleteTask(int? id) async {
-    if (id == null) return;
-    setState(() {
-      tasks.removeWhere((task) => task.id == id);
-      _calculatePercent();
-    });
-    final updatedTask = tasks.map((element) => element.toJson()).toList();
-    PreferencesManager().setString(StorageKey.tasks, jsonEncode(updatedTask));
-  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeController>(
-      create: (context)=>HomeController(),
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+      create: (context) => HomeController()..init(),
+      child: Consumer<HomeController>(
+        builder: (BuildContext context, HomeController value, Widget? child) {
+          final controller = context.read<HomeController>();
+          return Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          backgroundImage: userImagePath == null
-                              ? AssetImage('images/i7.jpeg')
-                              : FileImage(File(userImagePath!)),
-                        ),
-                        SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Text(
-                              "Good Evening ,$username",
-                              style: Theme.of(context).textTheme.titleMedium,
+                            CircleAvatar(
+                              backgroundImage: value.userImagePath == null
+                                  ? AssetImage('images/i7.jpeg')
+                                  : FileImage(File(value.userImagePath!)),
                             ),
-                            Text(
-                              "One task at a time.One step closer.",
-                              style: Theme.of(context).textTheme.titleSmall,
+                            SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Good Evening ,${value.username}",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                                Text(
+                                  "One task at a time.One step closer.",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () => ThemeController.toggleTheme(),
+                              child: Container(
+                                height: 34,
+                                width: 34,
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset(
+                                  // تبديل الأيقونة بناءً على المود
+                                  ThemeController.isDark()
+                                      ? 'images/sun.svg'
+                                      : 'images/Icon.svg',
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.secondary,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () => ThemeController.toggleTheme(),
-                          child: Container(
-                            height: 34,
-                            width: 34,
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
+                        SizedBox(height: 16),
+                        Text(
+                          'Yuhuu ,Your work Is ',
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'almost done ! ',
+                              style: Theme.of(context).textTheme.displayLarge,
                             ),
-                            child: SvgPicture.asset(
-                              // تبديل الأيقونة بناءً على المود
-                              ThemeController.isDark()
-                                  ? 'images/sun.svg'
-                                  : 'images/Icon.svg',
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.secondary,
-                                BlendMode.srcIn,
-                              ),
+                            SizedBox(width: 8),
+                            CustomSvgPicture.withoutColor(
+                              path: 'images/hand.svg',
                             ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        AchievedTasksWidget(
+                          totalTask: value.totalTask,
+                          totalDoneTasks: value.totalDoneTasks,
+                          percent: value.percent,
+                        ),
+                        SizedBox(height: 8),
+                        HighPriorityTasksWidget(
+                          tasks: value.tasks,
+                          onTap: (bool? value, int? index) {
+                            controller.doneTask(value, index);
+                          },
+                          refresh: () {
+                            controller.lodeTasks();
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24, bottom: 16),
+                          child: Text(
+                            "My Tasks",
+                            style: Theme.of(
+                              context,
+                            ).textTheme.displaySmall!.copyWith(fontSize: 20),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Yuhuu ,Your work Is ',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          'almost done ! ',
-                          style: Theme.of(context).textTheme.displayLarge,
-                        ),
-                        SizedBox(width: 8),
-                        CustomSvgPicture.withoutColor(path: 'images/hand.svg'),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    AchievedTasksWidget(
-                      totalTask: totalTask,
-                      totalDoneTasks: totalDoneTasks,
-                      percent: percent,
-                    ),
-                    SizedBox(height: 8),
-                    HighPriorityTasksWidget(
-                      tasks: tasks,
-                      onTap: (bool? value, int? index) {
-                        _doneTask(value, index);
-                      },
-                      refresh: () {
-                        _lodeTasks();
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24, bottom: 16),
-                      child: Text(
-                        "My Tasks",
-                        style: Theme.of(
-                          context,
-                        ).textTheme.displaySmall!.copyWith(fontSize: 20),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  SliverTaskListWidget(
+                    tasks: value.tasks,
+                    onTap: (bool? value, int? index) async {
+                      controller.doneTask(value, index);
+                    },
+                    onDelete: (int? id) {
+                      controller.deleteTask(id);
+                    },
+                    onEdit: () {
+                      controller.lodeTasks();
+                    },
+                  ),
+                ],
               ),
-              SliverTaskListWidget(
-                tasks: tasks,
-                onTap: (bool? value, int? index) async {
-                  _doneTask(value, index);
-                },
-                onDelete: (int? id) {
-                  _deleteTask(id);
-                },
-                onEdit: () {
-                  _lodeTasks();
-                },
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: SizedBox(
-          height: 44,
-          child: FloatingActionButton.extended(
-            onPressed: () async {
-              final bool? result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return AddTaskScreen();
-                  },
-                ),
-              );
-              if (result != null && result) {
-                _lodeTasks();
-              }
-            },
-
-            label: Text('Add New Task'),
-            icon: Icon(Icons.add),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
             ),
-          ),
-        ),
+            floatingActionButton: SizedBox(
+              height: 44,
+              child: FloatingActionButton.extended(
+                onPressed: () async {
+                  final bool? result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return AddTaskScreen();
+                      },
+                    ),
+                  );
+                  if (result != null && result) {
+                    controller.lodeTasks();
+                  }
+                },
+
+                label: Text('Add New Task'),
+                icon: Icon(Icons.add),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
