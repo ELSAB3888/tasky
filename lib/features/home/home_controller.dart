@@ -22,7 +22,7 @@ class HomeController with ChangeNotifier {
 
   void lodeUserName() async {
     username = PreferencesManager().getString(StorageKey.username);
-    userImagePath = PreferencesManager().getString('user_Image');
+    userImagePath = PreferencesManager().getString(StorageKey.userImage);
 
     notifyListeners();
   }

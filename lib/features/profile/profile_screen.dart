@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       motivationQuote =
           PreferencesManager().getString(StorageKey.motivation) ??
           'One task at a time. One step closer.';
-      userImagePath = PreferencesManager().getString('user_Image');
+      userImagePath = PreferencesManager().getString(StorageKey.userImage);
       isLoading = false;
     });
   }
@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _saveImage(XFile file) async {
     final appDir = await getApplicationDocumentsDirectory();
     final newFile = await File(file.path).copy('${appDir.path}/${file.name}');
-    PreferencesManager().setString('user_Image', newFile.path);
+    PreferencesManager().setString(StorageKey.userImage, newFile.path);
   }
 
   // void _showButtonSheet(BuildContext context) {
