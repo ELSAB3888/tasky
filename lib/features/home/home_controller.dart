@@ -16,11 +16,11 @@ class HomeController with ChangeNotifier {
   double percent = 0;
 
   init() {
-    lodeUserName();
+    lodeUserData();
     lodeTasks();
   }
 
-  void lodeUserName() async {
+  void lodeUserData() async {
     username = PreferencesManager().getString(StorageKey.username);
     userImagePath = PreferencesManager().getString(StorageKey.userImage);
 

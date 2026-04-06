@@ -1,58 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:todo/models/task_model.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/features/home/home_controller.dart';
 import 'package:todo/core/components/task_item_widget.dart';
 
 class SliverTaskListWidget extends StatelessWidget {
-  const SliverTaskListWidget({
-    super.key,
-    required this.tasks,
-    required this.onTap,
-    required this.onDelete,
-    required this.onEdit,
-    this.emptyMessage,
-  });
-
-  final List<TaskModel> tasks;
-  final Function(bool?, int?) onTap;
-  final Function(int?) onDelete;
-  final Function onEdit;
-  final String? emptyMessage;
+  const SliverTaskListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return tasks.isEmpty
-        ? SliverToBoxAdapter(
-            child: Center(
-              child: Text(
-                emptyMessage ?? "Add Your Tasks Here",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          )
-        : SliverPadding(
-            padding: EdgeInsets.only(bottom: 50),
-            sliver: SliverList.separated(
-              itemCount: tasks.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 8);
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return TaskItemWidget(
-                  model: tasks[index],
-                  onChanged: (bool? value) {
-                    onTap(value, index);
-                  },
-                  onDelete: (int id) {
-                    onDelete(id);
-                  },
-                  onEdit: () => onEdit(),
-                );
-              },
-            ),
-          );
+    return Consumer<HomeController>(
+      builder:
+          (BuildContext context, HomeController controller, Widget? child) {
+            final tasksList = controller.tasks;
+            return tasksList.isEmpty
+                ? SliverToBoxAdapter(
+                    child: Center(
+                      child: Text(
+                        "Add Your Tasks Here",
+                        style: Theme.of(
+                          context,
+                        ).textTheme.displaySmall!.copyWith(fontSize: 16),
+                      ),
+                    ),
+                  )
+                : SliverPadding(
+                    padding: EdgeInsets.only(bottom: 50),
+                    sliver: SliverList.separated(
+                      itemCount: tasksList.length,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 8);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        return TaskItemWidget(
+                          model: tasksList[index],
+                          onChanged: (bool? value) {
+                            controller.doneTask(value, index);
+                          },
+                          onDelete: (int id) {
+                            controller.deleteTask(id);
+                          },
+                          onEdit: () => controller.lodeTasks(),
+                        );
+                      },
+                    ),
+                  );
+          },
+    );
   }
 }
