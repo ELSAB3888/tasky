@@ -25,10 +25,7 @@ class TaskListWidget extends StatelessWidget {
         ? Center(
             child: Text(
               emptyMessage ?? "Add Your Tasks Here",
-              style: const TextStyle(
-                color: Colors.red, // هل سيتحول النص للون الأحمر؟
-                fontSize: 24,
-              ),
+              style: Theme.of(context).textTheme.displaySmall,
             ),
           )
         : ListView.separated(
