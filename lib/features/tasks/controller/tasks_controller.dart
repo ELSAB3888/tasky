@@ -8,6 +8,7 @@ class TasksController extends ChangeNotifier {
   List<TaskModel> tasks = [];
   List<TaskModel> completeTasks = [];
   List<TaskModel> todoTasks = [];
+  List<TaskModel> highPriorityTasks = [];
 
   init() {
     _loadTasks();
@@ -22,6 +23,10 @@ class TasksController extends ChangeNotifier {
           .toList();
       todoTasks = tasks.where((element) => element.isDone == false).toList();
       completeTasks = tasks.where((element) => element.isDone == true).toList();
+      highPriorityTasks = tasks
+          .where((element) => element.isHighPriority)
+          .toList();
+      highPriorityTasks = highPriorityTasks.reversed.toList();
       // calculatePercent();
       notifyListeners();
     }
@@ -47,10 +52,23 @@ class TasksController extends ChangeNotifier {
     _loadTasks();
   }
 
+  void doneHighPriorityTasksTask(bool? value, int? index) async {
+    if (index == null) return;
+    highPriorityTasks[index].isDone = value ?? false;
+    final int newIndex = tasks.indexWhere(
+      (e) => e.id == highPriorityTasks[index].id,
+    );
+    tasks[newIndex] = highPriorityTasks[index];
+    await PreferencesManager().setString(StorageKey.tasks, jsonEncode(tasks));
+    _loadTasks();
+  }
+
   deleteTask(int? id) async {
     if (id == null) return;
     tasks.removeWhere((e) => e.id == id);
     todoTasks.removeWhere((task) => task.id == id);
+    completeTasks.removeWhere((task) => task.id == id);
+    highPriorityTasks.removeWhere((task) => task.id == id);
     final updatedTask = todoTasks.map((element) => element.toJson()).toList();
     PreferencesManager().setString(StorageKey.tasks, jsonEncode(updatedTask));
     notifyListeners();
