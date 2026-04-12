@@ -23,11 +23,14 @@ class CompletedTasksScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Consumer<TasksController>(
-              builder: (BuildContext context, value, Widget? child) {
+              builder: (BuildContext context, valueController, Widget? child) {
                 return TaskListWidget(
-                  tasks: value.completeTasks,
+                  tasks: valueController.completeTasks,
                   onTap: (value, index) async {
-                    controller.doneCompleteTask(value, index);
+                    controller.doneTask(
+                      value,
+                      valueController.completeTasks[index!].id,
+                    );
                   },
                   emptyMessage: "No Tasks Yet",
                   onDelete: (int? id) {

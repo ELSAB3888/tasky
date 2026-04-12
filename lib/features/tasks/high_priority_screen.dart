@@ -22,11 +22,14 @@ class HighPriorityScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Consumer<TasksController>(
-          builder: (BuildContext context, value, Widget? child) {
+          builder: (BuildContext context, valueController, Widget? child) {
             return TaskListWidget(
-              tasks: value.highPriorityTasks,
+              tasks: valueController.highPriorityTasks,
               onTap: (value, index) async {
-                controller.doneHighPriorityTasksTask(value, index);
+                controller.doneTask(
+                  value,
+                  valueController.highPriorityTasks[index!].id,
+                );
               },
               emptyMessage: "No Tasks Yet",
               onDelete: (int? id) {
