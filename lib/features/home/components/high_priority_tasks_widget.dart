@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo/features/home/home_controller.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/features/tasks/high_priority_screen.dart';
 import '../../../core/widgets/custom_check_box.dart';
 import '../../../core/widgets/custom_svg_picture.dart';
+import '../../tasks/controller/tasks_controller.dart';
 
 class HighPriorityTasksWidget extends StatelessWidget {
   const HighPriorityTasksWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeController>(
+    return Consumer<TasksController>(
       builder:
-          (BuildContext context, HomeController controller, Widget? child) {
+          (BuildContext context, TasksController controller, Widget? child) {
             List<TaskModel> tasksList = controller.tasks;
             return Container(
               width: double.infinity,
@@ -64,7 +64,10 @@ class HighPriorityTasksWidget extends StatelessWidget {
                                     final index = tasksList.indexWhere(
                                       (e) => e.id == task.id,
                                     );
-                                    controller.doneTask(value, index);
+                                    controller.doneHighPriorityTasksTask(
+                                      value,
+                                      index,
+                                    );
                                   },
                                 ),
                                 Expanded(
@@ -95,7 +98,7 @@ class HighPriorityTasksWidget extends StatelessWidget {
                           },
                         ),
                       );
-                      controller.lodeTasks();
+                      controller.init();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16),

@@ -8,47 +8,42 @@ class TodoTasksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TasksController>(
-      create: (_) => TasksController()..init(),
-      builder: (context, _) {
-        final controller = context.read<TasksController>();
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Text(
-                'To Do Tasks',
-                style: Theme.of(
-                  context,
-                ).textTheme.displaySmall!.copyWith(fontSize: 20),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Consumer<TasksController>(
-                  builder: (BuildContext context, value, Widget? child) {
-                    return TaskListWidget(
-                      tasks: controller.todoTasks,
-                      onTap: (value, index) async {
-                        controller.doneTask(value, index);
-                      },
-                      emptyMessage: "No Tasks Yet",
-                      onDelete: (int? id) {
-                        controller.deleteTask(id);
-                      },
-                      onEdit: () {
-                        controller.init();
-                      },
-                    );
+    final controller = context.read<TasksController>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Text(
+            'To Do Tasks',
+            style: Theme.of(
+              context,
+            ).textTheme.displaySmall!.copyWith(fontSize: 20),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Consumer<TasksController>(
+              builder: (BuildContext context, value, Widget? child) {
+                return TaskListWidget(
+                  tasks: controller.todoTasks,
+                  onTap: (value, index) async {
+                    controller.doneTask(value, index);
                   },
-                ),
-              ),
+                  emptyMessage: "No Tasks Yet",
+                  onDelete: (int? id) {
+                    controller.deleteTask(id);
+                  },
+                  onEdit: () {
+                    controller.init();
+                  },
+                );
+              },
             ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 }

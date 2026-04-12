@@ -8,42 +8,37 @@ class HighPriorityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TasksController()..init(),
-      builder: (context, _) {
-        final controller = context.read<TasksController>();
-        return Scaffold(
-          appBar: AppBar(
-            iconTheme: IconThemeData(color: Color(0xFFFCFCFC)),
-            title: Text(
-              "High Priority Tasks",
-              style: Theme.of(
-                context,
-              ).textTheme.displaySmall!.copyWith(fontSize: 20),
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Consumer<TasksController>(
-              builder: (BuildContext context, value, Widget? child) {
-                return TaskListWidget(
-                  tasks: value.highPriorityTasks,
-                  onTap: (value, index) async {
-                    controller.doneHighPriorityTasksTask(value, index);
-                  },
-                  emptyMessage: "No Tasks Yet",
-                  onDelete: (int? id) {
-                    controller.deleteTask(id);
-                  },
-                  onEdit: () {
-                    controller.init();
-                  },
-                );
+    final controller = context.read<TasksController>();
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Color(0xFFFCFCFC)),
+        title: Text(
+          "High Priority Tasks",
+          style: Theme.of(
+            context,
+          ).textTheme.displaySmall!.copyWith(fontSize: 20),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Consumer<TasksController>(
+          builder: (BuildContext context, value, Widget? child) {
+            return TaskListWidget(
+              tasks: value.highPriorityTasks,
+              onTap: (value, index) async {
+                controller.doneHighPriorityTasksTask(value, index);
               },
-            ),
-          ),
-        );
-      },
+              emptyMessage: "No Tasks Yet",
+              onDelete: (int? id) {
+                controller.deleteTask(id);
+              },
+              onEdit: () {
+                controller.init();
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

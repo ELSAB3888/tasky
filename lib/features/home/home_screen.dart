@@ -8,6 +8,7 @@ import 'package:todo/features/home/components/high_priority_tasks_widget.dart';
 import 'package:todo/features/home/components/sliver_list_widget.dart';
 import '../../core/theme/theme_controller.dart';
 import '../../core/widgets/custom_svg_picture.dart';
+import '../tasks/controller/tasks_controller.dart';
 import 'components/achieved_tasks_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -145,7 +146,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                   if (result != null && result) {
-                    Context.read<HomeController>().lodeTasks();
+                    Context.read<TasksController>().init();
                   }
                 },
 
