@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:todo/features/tasks/controller/tasks_controller.dart';
 import '../../core/components/task_list_widget.dart';
 
-class CompletedTasksScreen extends StatelessWidget {
-  const CompletedTasksScreen({super.key});
+class TodoTasksScreen extends StatelessWidget {
+  const TodoTasksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext _) => TasksController()..init(),
+    return ChangeNotifierProvider<TasksController>(
+      create: (_) => TasksController()..init(),
       builder: (context, _) {
         final controller = context.read<TasksController>();
         return Column(
@@ -18,8 +18,10 @@ class CompletedTasksScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Text(
-                'Completed Tasks',
-                style: Theme.of(context).textTheme.labelSmall,
+                'To Do Tasks',
+                style: Theme.of(
+                  context,
+                ).textTheme.displaySmall!.copyWith(fontSize: 20),
               ),
             ),
             Expanded(
@@ -28,9 +30,9 @@ class CompletedTasksScreen extends StatelessWidget {
                 child: Consumer<TasksController>(
                   builder: (BuildContext context, value, Widget? child) {
                     return TaskListWidget(
-                      tasks: value.completeTasks,
+                      tasks: controller.todoTasks,
                       onTap: (value, index) async {
-                        controller.doneCompleteTask(value, index);
+                        controller.doneTask(value, index);
                       },
                       emptyMessage: "No Tasks Yet",
                       onDelete: (int? id) {
